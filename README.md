@@ -8,19 +8,21 @@
 - [`STM`](https://github.com/KimUJin3359/Firmware_Programming#stm)
 - [`LoRA`](https://github.com/KimUJin3359/Firmware_Programming#lora)
 
+---
+
 ### 임베디드 회로
 #### GPIO(General Purpose Input Output)
-- 범용 입출력이 가능한 핀
+- **범용 입출력이 가능**한 핀
 - 사용 규칙
   - 사용할 Pin에 대해 Input, Output 선택
   - 출력 설정 시 high, low를 택일하여 출력
   - 입력 설정 시 high, low를 입력 받음
-  - GPIO 입출력은 3.3V
+  - **GPIO 입출력은 3.3V**
 
 #### 저항
 - MCU는 High, Low를 알 수 없는 모호한 상태
-- 노이즈에 취약함(플로팅 상태)
-- 풀업 저항
+- 노이즈에 취약함(**플로팅 상태**)
+- **풀업 저항**
   - 스위치를 닫았을 때 : Low
   - 스위치를 열었을 때 : High
   <img width="400" alt="pull_up" src="https://user-images.githubusercontent.com/50474972/116412491-b4061380-a871-11eb-814b-395aa90b19ef.png">   
@@ -31,10 +33,10 @@
   
   ![pull_down](https://user-images.githubusercontent.com/50474972/116412357-92a52780-a871-11eb-8d3a-ee2e1654c270.png)
   
-- 라즈베리파이, 아두이노 등은 소스 코드를 통한 자체 풀업/풀다운 저항을 제공하지만 기본 임베디드 장비에서는 지원을 하지 않기 때문에 회로를 알아두는 것이좋음
+- 라즈베리파이, 아두이노 등은 소스 코드를 통한 자체 풀업/풀다운 저항을 제공하지만 기본 임베디드 장비에서는 지원을 하지 않기 때문에 회로를 알아두는 것이 좋음
 - MCU에서는 풀업을 더 많이 사용
 - 왜 전압에 저항을 달아주는가?
-  - short(단락) : 단락 회로란 전류가 의도하지 않은 매우 낮은 임피던스를 갖는 회로의 경로를 흐르는 것
+  - **short(단락)** : 단락 회로란 **전류가 의도하지 않은 매우 낮은 임피던스를 갖는 회로의 경로를 흐르는 것**
     - 즉, VCC와 GND가 아무런 저항없이 연결된 것
   - 10V의 전압이 0.1Ω에 흐를 경우, I = 10/0.1 = 100A의 전류가 흐르게 됨
   - 불이 나거나, 터질 수 있음
@@ -48,28 +50,28 @@
 ### 임베디드 시스템
 - Embedded : 내장된
 
-| PC | Embedded |
+| `PC` | `Embedded` |
 | --- | --- |
-| 사용자가 어떠한 용도로 사용할지 모름 | 제작부터 그 목적이 정해져 있음 |
-| General Purpose Computer | |
+| 사용자가 어떠한 용도로 사용할지 모름 | 제작부터 그 **목적**이 정해져 있음 |
+| **General Purpose** Computer | |
 | 게임, 워드, 인터넷 등 | 전기밥통, 세탁기 등 |
 
 - 분야
   - 하드웨어 : IP(MP, MC), 휘발성 메모리(RAM), 비휘발성 메모리(NRAM, 플래쉬 메모리, NOR, NAND), ASIC, PLD, FPGA, 임베디드 보드
   - 소프트웨어 : OS(Free OS, Linux), 개발 툴(IDE, Linker), 코드 분석툴(SCA, DCA), 디버깅 툴(ICE 등)
 
-| OS | Non-OS |
+| `OS` | `Non-OS` |
 | --- | --- |
 | OS가 탑재된 임베디드 시스템 | Non-OS 임베디드 시스템 |
-| Window-CE, Embedded Linux, FreeRTOS, VxWorks, Android 등 | 보통 Firmware 프로그램(F/W) |
-| | OS가 없어 소프트웨어가 직접 하드웨어를 제어 |
+| Window-CE, Embedded Linux, FreeRTOS, VxWorks, Android 등 | **보통 Firmware** 프로그램(F/W) |
+| | OS가 없어 **소프트웨어가 직접 하드웨어를 제어** |
 
 - 두 시스템은 서로 장단점을 가짐
 
 ---
 
 ### AP 구성
-- AP : 모바일 중앙 처리 장치 어플리케이션 프로세서(Application Processor)
+- **AP** : **모바일 중앙 처리 장치 어플리케이션 프로세서(Application Processor)**
   - AP = CPU + Memory + Graphic IC + Storage
 - CPU : 컴퓨터는 x86(CISC), AP는 ARM(RISC) 계열로 구성됨
 - GPU : Vector 부동 소수점 연산은 CPU 보다 빠름
@@ -82,14 +84,14 @@
   | --- | --- |
   | 모바일 시장에서 강세 | PC 시장에서 강세 |
   | 저가 | 고가 |
-  | 성능 낮음 | 성능 높음 |
+  | 성능 비교적 낮음 | 성능 높음 |
   | 전력 소모가 적음 | 전력 소모가 많음 |
   | 발열량이 낮음 | 최대한의 성능을 내기위해 발열량이 많음 |
   
 #### ARM(Advanced RISC Machine)
-- Cortex A : 고성능, 핸드폰 탑재
-- Cortex R : Realtime OS용
-- Cortex M : 저성능, 기존 MCU 시장을 장악
+- **`Cortex A`** : **고성능, 핸드폰 탑재**
+- `Cortex R` : Realtime OS용
+- **`Cortex M`** : 저성능, 기존 MCU 시장을 장악
 - A, R, M 순서로 성능이 좋음
 
 #### 다양한 MCU 벤더
@@ -104,12 +106,12 @@
   - Imager 다운로드 : Software -> Download
 - 다양한 Raspberry Pi 보드의 종류
   - 외부적인 요구조건 변동 및 CPU 성능에 따라 다양한 모델이 제작됨
-  - 4 Model B CPU : Broadcom BCM2711 SoC
+  - 4 Model B CPU : **Broadcom BCM2711 SoC**
     - 가장 최신 제품
   - 3 Model B+ CPU : ARM Cortex A57 1.4GHz
 - 4 Model B
   - CPU : Broadcom BCM2711 SoC
-    - Quad Core ARM Cortex-A72 1.5GHz
+    - **Quad Core ARM Cortex-A72 1.5GHz**
   - GPU : Broadcom VideoCore VI 500MHz
   - 메모리 2/4/8GB 지원
   - Disk 없음(SD카드로 대체)
@@ -141,7 +143,7 @@
 
 ### STM
 #### STM 특징
-- ARM사의 최신 Cortex-M3를 사용한 최신의 아키텍쳐
+- ARM사의 최신 **Cortex-M3**를 사용한 최신의 아키텍쳐
 - 우수하고 뛰어난 주변 I/O들
 - 저전력/저전압 성능
 - 쉬운 개발
@@ -195,10 +197,10 @@
   - ARm Cortex-M 계열에서 가장 많이 사용하는 Cortex-M3
 
 #### 회로에 대한 최소한의 이해
-- 전원 유무 : 보드에 전원이 공급되는지 유무, 된다면 전압측정 까지
-- 클럭 발진 유무 및 정확한 주기 : 클럭 발진이 안되면 보드가 동작하지 않음
-- GPIO 연결 포트
-- 점퍼 설정 등
+- ** `전원 유무`** : 보드에 전원이 공급되는지 유무, 된다면 전압측정 까지
+- **`클럭 발진 유무 및 정확한 주기`** : 클럭 발진이 안되면 보드가 동작하지 않음
+- **`GPIO 연결 포트`**
+- **`점퍼 설정`** 등
 
 #### 개발 환경
 - [다운로드 사이트](https://www.st.com/stm32cube)
