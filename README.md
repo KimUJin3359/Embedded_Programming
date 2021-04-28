@@ -1,43 +1,5 @@
 # Firmware_Programming
 
-### AP 구성
-- AP : 모바일 중앙 처리 장치 어플리케이션 프로세서(Application Processor)
-  - AP = CPU + Memory + Graphic IC + Storage
-- CPU : 컴퓨터는 x86(CISC), AP는 ARM(RISC) 계열로 구성됨
-- GPU : Vector 부동 소수점 연산은 CPU 보다 빠름
-- 통신 : Wi-Fi 802.11a/b/g/n/ac
-- VPU : 4K 재생 담당
-- DSP : 오디오, 영상처리, 단순 반복 계산에 특화
-- ISP : 카메라 처리 담당
-
-  | ARM | Intel |
-  | --- | --- |
-  | 모바일 시장에서 강세 | PC 시장에서 강세 |
-  | 저가 | 고가 |
-  | 성능 낮음 | 성능 높음 |
-  | 전력 소모가 적음 | 전력 소모가 많음 |
-  | 발열량이 낮음 | 최대한의 성능을 내기위해 발열량이 많음 |
-  
-#### ARM(Advanced RISC Machine)
-- Cortex A : AP용
-- Cortex R : Realtime OS용
-- Cortex M : Mobile용
-- A, R, M 순서로 
-
----
-
-### LoRA
-- 바깥(20m 이상)에 있는 노드들을 집에 있는 서버와의 연결 방법
-  - weather station 등의 활용
-- 원거리(1.5 ~ 2km)의 데이터를 주고받기 위해 만들어짐
-- WiFi : 대역폭과 속도가 Bluetooth에 비해 성능이 좋음
-- Bluetooth : 근거리 통신(~100m 장애물의 영향을 많이 받음)
-  - WiFi와 동일하게 2.4GHz 대역을 사용
-  - WiFi에 비해 전력소모/비용이 저렴함(소량의 데이터를 보낼 때 더 유용)
-- Celluar : 비용적인 문제
-
----
-
 ### 임베디드 회로
 #### GPIO(General Purpose Input Output)
 - 범용 입출력이 가능한 핀
@@ -72,6 +34,59 @@
 #### DataSheet
 - 모든 장치들은 DataSheet가 존재함 -> 장치에 맞는 설계를 해줘야됨
   - LED : 정격 전압, 정격 전류, 최대 허용 전압, 최대 소모 전류 확인
+
+---
+
+### 임베디드 시스템
+- Embedded : 내장된
+
+| PC | Embedded |
+| --- | --- |
+| 사용자가 어떠한 용도로 사용할지 모름 | 제작부터 그 목적이 정해져 있음 |
+| General Purpose Computer | |
+| 게임, 워드, 인터넷 등 | 전기밥통, 세탁기 등 |
+
+- 분야
+  - 하드웨어 : IP(MP, MC), 휘발성 메모리(RAM), 비휘발성 메모리(NRAM, 플래쉬 메모리, NOR, NAND), ASIC, PLD, FPGA, 임베디드 보드
+  - 소프트웨어 : OS(Free OS, Linux), 개발 툴(IDE, Linker), 코드 분석툴(SCA, DCA), 디버깅 툴(ICE 등)
+
+| OS | Non-OS |
+| --- | --- |
+| OS가 탑재된 임베디드 시스템 | Non-OS 임베디드 시스템 |
+| Window-CE, Embedded Linux, FreeRTOS, VxWorks, Android 등 | 보통 Firmware 프로그램(F/W) |
+| | OS가 없어 소프트웨어가 직접 하드웨어를 제어 |
+
+- 두 시스템은 서로 장단점을 가짐
+
+---
+
+### AP 구성
+- AP : 모바일 중앙 처리 장치 어플리케이션 프로세서(Application Processor)
+  - AP = CPU + Memory + Graphic IC + Storage
+- CPU : 컴퓨터는 x86(CISC), AP는 ARM(RISC) 계열로 구성됨
+- GPU : Vector 부동 소수점 연산은 CPU 보다 빠름
+- 통신 : Wi-Fi 802.11a/b/g/n/ac
+- VPU : 4K 재생 담당
+- DSP : 오디오, 영상처리, 단순 반복 계산에 특화
+- ISP : 카메라 처리 담당
+
+  | ARM | Intel |
+  | --- | --- |
+  | 모바일 시장에서 강세 | PC 시장에서 강세 |
+  | 저가 | 고가 |
+  | 성능 낮음 | 성능 높음 |
+  | 전력 소모가 적음 | 전력 소모가 많음 |
+  | 발열량이 낮음 | 최대한의 성능을 내기위해 발열량이 많음 |
+  
+#### ARM(Advanced RISC Machine)
+- Cortex A : 고성능, 핸드폰 탑재
+- Cortex R : Realtime OS용
+- Cortex M : 저성능, 기존 MCU 시장을 장악
+- A, R, M 순서로 성능이 좋음
+
+#### 다양한 MCU 벤더
+- ARM은 Archon사가 단독으로 설계하여 판매
+- 다른 반도체 벤더가 이를 구매한 후  달리하여 판매
 
 ---
 
@@ -113,3 +128,81 @@
 #### ID/Password(Default)
 - id : pi
 - password : raspberry
+
+---
+
+### STM
+#### STM 특징
+- ARM사의 최신 Cortex-M3를 사용한 최신의 아키텍쳐
+- 우수하고 뛰어난 주변 I/O들
+- 저전력/저전압 성능
+- 쉬운 개발
+- 전 제품군에 걸쳐 제공되는 핀투핀, 주변 I/O와 소프트웨어 호환성이 우수
+- 다양한 API/ 샘플 소스코드 제공
+
+#### Device Part Numbering
+- STM32/F/407/V/G/T/6/xxx
+- Device Type
+  - STM32 : ARM-based 32-bit microcontroller
+- Product Type
+  - F : general purpose
+- Device Subfamily
+  - 405 : STM32F40x, connectivity
+  - 407 : STM32F40x, connectivity, camera VF, Ethernet
+- Pin count
+  - R : 64 pins
+  - O : 90 pins
+  - V : 100 pins
+  - Z : 144 pins
+  - I : 176 pins
+- Flash memory size
+  - E : 512Kb
+  - G : 1024Kb
+- Package
+  - T : LQFP  
+  - H : UFBGA
+  - Y : WLCSP
+- Temperature range
+  - 6 : Industrial temperature range : -40 ~ 85C
+  - 7 : Industrial temperature range : -40 ~ 105C
+- Options
+  - xxx : programmed parts
+  - TR : tape and reel
+
+#### 사용 
+- STM Development Board
+  - 보드명은 제조사를 따름 : STM Board
+  - 보드의 세 종류
+    - Nucleo : 교육 및 초기 개발용(아주 저렴, 스택으로 필요한 모듈을 쌓아서 사용 가능)
+    - Discovery : 교육 및 초기 개발용
+    - Eval Board : 모든 센스, 기능을 테스트 할 수 있도록 개발된 보드
+  - 디바이스가 매우 많음
+    - 429 디바이스 : STM32F429 Discovery Board
+    - 103 디바이스 : STM32F103 Discovery Board
+- 사용 모델
+  - ST 개발용 보드 Nucleo
+    - 보드 모델명 : Nucleo - F103RB
+    - ST사의 CPU 칩셋 이름 : STM32F103RB
+    - CPU : ARM Cortex-M3
+  - ARm Cortex-M 계열에서 가장 많이 사용하는 Cortex-M3
+
+#### 회로에 대한 최소한의 이해
+- 전원 유무 : 보드에 전원이 공급되는지 유무, 된다면 전압측정 까지
+- 클럭 발진 유무 및 정확한 주기 : 클럭 발진이 안되면 보드가 동작하지 않음
+- GPIO 연결 포트
+- 점퍼 설정 등
+
+#### 
+---
+
+### LoRA
+- 바깥(20m 이상)에 있는 노드들을 집에 있는 서버와의 연결 방법
+  - weather station 등의 활용
+- 원거리(1.5 ~ 2km)의 데이터를 주고받기 위해 만들어짐
+- WiFi : 대역폭과 속도가 Bluetooth에 비해 성능이 좋음
+- Bluetooth : 근거리 통신(~100m 장애물의 영향을 많이 받음)
+  - WiFi와 동일하게 2.4GHz 대역을 사용
+  - WiFi에 비해 전력소모/비용이 저렴함(소량의 데이터를 보낼 때 더 유용)
+- Celluar : 비용적인 문제
+
+---
