@@ -169,7 +169,7 @@
   - xxx : programmed parts
   - TR : tape and reel
 
-#### 사용 
+#### 사용 보드
 - STM Development Board
   - 보드명은 제조사를 따름 : STM Board
   - 보드의 세 종류
@@ -192,7 +192,19 @@
 - GPIO 연결 포트
 - 점퍼 설정 등
 
-#### 
+#### 개발 환경
+- [다운로드 사이트](https://www.st.com/stm32cube)
+- STM32CubeMX
+  - STM32 마이크로 컨트롤러 및 마이크로 프로세서를 매우 쉽게 구성할 수 있는 그래픽 도구
+  - 단계별 프로세스를 통해 Arm Cortex-M(또는 ARM Cortex-A 코어 용 부분 Linux 장치 트리)에 대한 해당 초기화 C 코드 생성도 포함
+- STM32CubeIDE
+- 디버거
+  - Trace : CPU의 동작을 멈추면서, 한 단계씩 진행하는 디버깅 방식
+  - 임베디드 환경에서 CPU를 일시 중지시키는 일은 어려움
+  - 따라서, 디버거용 장비가 필요
+    - ST-Link
+  - Nucleo 보드에는 ST-Link/V2가 포함되어 음
+
 ---
 
 ### LoRA
