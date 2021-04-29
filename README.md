@@ -50,7 +50,61 @@
   - 동작환경(온도, 습도 등)
   - 기타
 - 모든 장치들은 DataSheet가 존재함 -> 장치에 맞는 설계를 해줘야됨
-  - LED : 정격 전압, 정격 전류, 최대 허용 전압, 최대 소모 전류 확인
+- 전체 블럭다이어그램
+  - 디바이스의 특징, 전원, 클럭, 전체 블럭다이어그램, 메모리 부분 숙지
+  - 후에 Peripheral(UART, DMA, I2C 등)을 보는 것이 좋음
+
+#### Reference Manual
+- 레지스터 관련 정보 확인
+- DataSheet에 비해 더욱더 상세한 정보가 들어가 있음
+
+
+#### 오실로스코프
+- 특정 시간 간격의 전압 변화를 볼 수 있는 장치
+
+#### 용어정리
+- `DMA(Direct Memory Access)` : CPU 속도를 올리는(성능 향상) 기술
+  - 데이터 보내는 작업을 일일이 관여하는 것이 아닌, 다른 작업을 할 수 있음
+  - DMA Controller : 데이터 보내는 작업을 대신 관리하는 장치
+- `GPIO` : 범용 입출력
+- `IWDG` : Watch Dog Timer
+  - 내부적으로 타이머를 돌려, 프로그램이 정상 동작하는지를 판단
+- `NVIC` : Nested Vectored Interrupt Controller
+  - 중첩된 인터럽트를 제어하는 기능
+  - 모든 exception에 대해서 우선순위가 설정되어있고 이 우선순위에 따라 interrupt를 처리
+  - 숫자가 낮을수록, 우선순위가 높음
+  - 인터럽트 모드
+    - External Interrupt Mode with Rising edge trigger detection
+    - External Interrupt Mode with Falling edge trigger detection
+    - External Interrupt Mode with Rising/Fallig edge trigger detection
+    - External Event Mode with Rising edge trigger detection
+    - External Event Mode with Falling edge trigger detection
+    - External Event Mode with Rising/Fallig edge trigger detection
+  - Event 모드 설정 시 sleep mode에 진입한 MCU를 꺠우는 용도로 사용됨
+  - 일반적으로 Falling edge trigger detection 사용
+  - 콜백 함수
+    - OOOit.c : 인터럽트 관련 소스 코드
+    ```
+    in OOOit.c
+    __weak void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+    
+    in main.c
+    void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+    {
+      .. 동작 내용
+    }
+    ```
+- `RCC` : 클럭
+- `ADC` : 아날로그를 디지털로 변환
+- `RTC` : Real Time Clock
+- Connectivity
+  - `CAN` : 차량에 쓰이는 통신
+  - `I2C`
+  - `SPI`
+  - `USART`
+  - `USB`
+- `CRC` : checksum
+- `MBED` : 컴파일러를 설치하지 않고 웹에서 개발할 수 있는 개발환경
 
 ---
 
@@ -208,10 +262,6 @@
 - **`클럭 발진 유무 및 정확한 주기`** : 클럭 발진이 안되면 보드가 동작하지 않음
 - **`GPIO 연결 포트`**
 - **`점퍼 설정`**
-- `NVIC` : Nested Vectored Interrup Controller
-  - 중첩된 인터럽트를 제어하는 기능
-  - 모든 exception에 대해서 우선순위가 설정되어있고 이 우선순위에 따라 interrupt를 처리
-  - 숫자가 낮을수록, 우선순위가 높음
 
 #### 개발 환경
 - [다운로드 사이트](https://www.st.com/stm32cube)
@@ -239,6 +289,50 @@
 
 ---
 
+### 레지스터를 통한 입출력
+#### Memory Mapped I/O
+- 주기억 장치의 일부주소를 입출력 장치에 할당하는 방법
+- 메모리의 x번지에 값을 쓰면 출력포트로 값이 나감
+- x번지에 값을 읽으면, 입력 포트의 값을 읽을 수 도 있음
+
+#### 레지스터 설정을 하는 이유
+- 개발 관련된 API가 존재하지 않는 경우도 많음
+- 레지스터로 설정하는 것이 일반적
+  - 레지스터로 설정하는 방법은 모든 MCU
+
+#### 해당 비트 세트/클리어
+- CRL : 0 ~ 7번 핀, CRH : 8 ~ 15번 
+- IDR : port input data register
+  - 포트가 입력일 경우 들어오는 데이터가 저장되는 레지스터
+- ODR : port output data register
+  - 포트가 출력일 경우 나갈 데이터를 저장
+- BSRR : port bit set/reset register
+  - 해당 비트를 0, 1로 설정할 수 있음
+  - BR = RESET, BS = SET 담당
+  - ODR을 쓰는것보다 연산 처리가 간단하고, 속도가 빠름
+- BRR : port bit reset register
+  - 오로지 리셋만함
+- LCKR : port configuration lock register
+  - GPIO는 input, output 택 일 사용이 가능, 사용 중 변경도 가능
+  - 락을 걸면 input -> output, output -> input 변경이 불가
+- 원하는 비트만 세트
+  ```
+  // GPIOA의 PA5 set
+  GPIOA->ODR = 1 << 5;
+  // GPIOA의 PA5 reset
+  GPIOA->ODR &= ~(1 << 5);
+  ```
+- 원하는 비트만 클리어
+
+---
+
+### Address를 통한 입출력
+- Memory Mapped I/O
+- 데이터시트를 확인하면 각 레지스터의 주소를 알 수 있음
+- 메모리 주소를 컴파일러에게 알려 주어야 함
+
+---
+
 ### LoRA
 - 바깥(20m 이상)에 있는 노드들을 집에 있는 서버와의 연결 방법
   - weather station 등의 활용
@@ -248,5 +342,3 @@
   - WiFi와 동일하게 2.4GHz 대역을 사용
   - WiFi에 비해 전력소모/비용이 저렴함(소량의 데이터를 보낼 때 더 유용)
 - Celluar : 비용적인 문제
-
----
