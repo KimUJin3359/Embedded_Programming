@@ -202,15 +202,23 @@
 - **`GPIO 연결 포트`**
 - **`점퍼 설정`** 등
 
-#### STM32F103RB Pinmap
-![STM32F103RB_pinmap](https://user-images.githubusercontent.com/50474972/116516555-b2d3f580-a908-11eb-844b-756072ac9f2f.png)
-
 #### 개발 환경
 - [다운로드 사이트](https://www.st.com/stm32cube)
 - STM32CubeMX
   - STM32 마이크로 컨트롤러 및 마이크로 프로세서를 매우 쉽게 구성할 수 있는 그래픽 도구
   - 단계별 프로세스를 통해 Arm Cortex-M(또는 ARM Cortex-A 코어 용 부분 Linux 장치 트리)에 대한 해당 초기화 C 코드 생성도 포함
 - STM32CubeIDE
+  - 주의 : 사용자 코드는 주석 안에 입력할 것
+    - 코드가 사라질 수 있음
+  ```
+  /* USER CODE BEGIN x */
+  ...
+  /* USER CODE END x */
+  ```
+  - 함수 원형 찾기
+    - ctrl + space
+    - 함수 위에서 F3
+    - 함수 우클릭 후 Open Declaration
 - 디버거
   - Trace : CPU의 동작을 멈추면서, 한 단계씩 진행하는 디버깅 방식
   - 임베디드 환경에서 CPU를 일시 중지시키는 일은 어려움
