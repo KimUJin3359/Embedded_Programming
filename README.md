@@ -302,6 +302,11 @@
 
 #### 해당 비트 세트/클리어
 - CRL : 0 ~ 7번 핀, CRH : 8 ~ 15번 
+  ![datasheet](https://user-images.githubusercontent.com/50474972/116590484-c73fde80-a958-11eb-856c-3abdfc2c9be4.png)
+  ```
+  // PIN A5를 Output Mode, 50MHz로 설정하려면
+  GPIO_CRL = 0x003;
+  ```
 - IDR : port input data register
   - 포트가 입력일 경우 들어오는 데이터가 저장되는 레지스터
 - ODR : port output data register
