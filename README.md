@@ -202,6 +202,9 @@
 - **`GPIO 연결 포트`**
 - **`점퍼 설정`** 등
 
+#### STM32F103RB Pinmap
+![STM32F103RB_pinmap](https://user-images.githubusercontent.com/50474972/116516555-b2d3f580-a908-11eb-844b-756072ac9f2f.png)
+
 #### 개발 환경
 - [다운로드 사이트](https://www.st.com/stm32cube)
 - STM32CubeMX
