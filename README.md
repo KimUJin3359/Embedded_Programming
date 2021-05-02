@@ -2,23 +2,18 @@
 
 ### 목차
 - [`임베디드 회로`](https://github.com/KimUJin3359/Firmware_Programming#%EC%9E%84%EB%B2%A0%EB%94%94%EB%93%9C-%ED%9A%8C%EB%A1%9C)
+- [`용어정리`](https://github.com/KimUJin3359/Firmware_Programming#%EC%9A%A9%EC%96%B4%EC%A0%95%EB%A6%AC)
 - [`임베디드 시스템`](https://github.com/KimUJin3359/Firmware_Programming#%EC%9E%84%EB%B2%A0%EB%94%94%EB%93%9C-%EC%8B%9C%EC%8A%A4%ED%85%9C)
 - [`AP 구성`](https://github.com/KimUJin3359/Firmware_Programming#ap-%EA%B5%AC%EC%84%B1)
 - [`라즈베리파이`](https://github.com/KimUJin3359/Firmware_Programming#%EB%9D%BC%EC%A6%88%EB%B2%A0%EB%A6%AC%ED%8C%8C%EC%9D%B4)
 - [`STM`](https://github.com/KimUJin3359/Firmware_Programming#stm)
+- [`레지스터를 통한 입출력`](https://github.com/KimUJin3359/Firmware_Programming#%EB%A0%88%EC%A7%80%EC%8A%A4%ED%84%B0%EB%A5%BC-%ED%86%B5%ED%95%9C-%EC%9E%85%EC%B6%9C%EB%A0%A5)
+- [`Address를 통한 입출력`](https://github.com/KimUJin3359/Firmware_Programming#address%EB%A5%BC-%ED%86%B5%ED%95%9C-%EC%9E%85%EC%B6%9C%EB%A0%A5)
 - [`LoRA`](https://github.com/KimUJin3359/Firmware_Programming#lora)
 
 ---
 
 ### 임베디드 회로
-#### GPIO(General Purpose Input Output)
-- **범용 입출력이 가능**한 핀
-- 사용 규칙
-  - 사용할 Pin에 대해 Input, Output 선택
-  - 출력 설정 시 high, low를 택일하여 출력
-  - 입력 설정 시 high, low를 입력 받음
-  - **GPIO 입출력은 3.3V**
-
 #### 저항
 - MCU는 High, Low를 알 수 없는 모호한 상태
 - 노이즈에 취약함(**플로팅 상태**)
@@ -58,7 +53,6 @@
 - 레지스터 관련 정보 확인
 - DataSheet에 비해 더욱더 상세한 정보가 들어가 있음
 
-
 #### 오실로스코프
 - 특정 시간 간격의 전압 변화를 볼 수 있는 장치
 
@@ -66,7 +60,12 @@
 - `DMA(Direct Memory Access)` : CPU 속도를 올리는(성능 향상) 기술
   - 데이터 보내는 작업을 일일이 관여하는 것이 아닌, 다른 작업을 할 수 있음
   - DMA Controller : 데이터 보내는 작업을 대신 관리하는 장치
-- `GPIO` : 범용 입출력
+- `GPIO(General Purpose Input Output)`
+  - **범용 입출력이 가능**한 핀
+  - 사용할 Pin에 대해 Input, Output 선택
+  - 출력 설정 시 high, low를 택일하여 출력
+  - 입력 설정 시 high, low를 입력 받음
+    - **GPIO 입출력은 3.3V**
 - `IWDG` : Watch Dog Timer
   - 내부적으로 타이머를 돌려, 프로그램이 정상 동작하는지를 판단
 - `NVIC` : Nested Vectored Interrupt Controller
@@ -343,6 +342,7 @@
 #### MX_GPIO_Init을 확인
 - ctrl + click 시 해당 함수로 이동
 - 그 중 GPIOA를 보면, (0x4000 0000 + 0x0001 0000) + 0x0000 0800
+  - Peripherals Base + APB2 Base + GPIOA Base
 
 #### Offset 확인
 - Reference Manual의 data register 확인
@@ -357,6 +357,43 @@
   // unsigned : 주소값이기 때문에
   *((volatile unsigned int *)0x4001080C) = 0xF0;
 ```
+
+---
+
+### Timer
+- 주기적으로 시간을 얻을 때 사용하는 디지털 카운터
+- STM32F103RB에는 4개의 Timer가 존재
+  ```
+  APB2 : TIM1,
+  APB1 : TIM2 ~ 4
+  ```
+- 관련 개념
+  - System Clock
+  - 주파수와 주기의 관계
+  - 분주비(Prescale Ratio Value)
+  - 카운트 값(Count Value)
+
+#### 타이머 계산
+- 타이머에 입력되는 주파수를 알아야 함
+
+![캡처](https://user-images.githubusercontent.com/50474972/116816016-415fa580-ab9b-11eb-8463-33b08aa98f97.JPG)
+![클럭설정](https://user-images.githubusercontent.com/50474972/116816809-75889580-ab9e-11eb-977f-4a8604e42ebb.JPG)
+
+- 위 블록도에서 TIM2는 APB1에 연결되어 있고, APB1의 System Clock은 64MHz
+```
+Prescaler : 64 - 1
+Counter Period : 1000 - 1
+System Clock : 64MHz로 설정 시
+UpdateEvent = Timer_clock / (Prescaler + 1)(Period + 1)
+UpdateEvent = 64000000 / (64 * 1000) = 1000Hz = 0.001sec
+```
+
+#### 타이머 모드
+- 카운터 모드 : 카운터 값이 증가/감소되면서 0이 될 때 인터럽트 발생
+- 외부 입력 카운터 모드 : 외부 입력이 발생할 때 인터럽트 발생
+- 펄스폭변조 출력 모드 : PWM 파형 생성 모드
+- 입력 캡쳐 모드 : 타이머가 생성하는 PWM 신호를 다른 타이머에서 캡쳐하여 Freq, Duty 비 확인 가능
+- 출력 비교 모드 : TCNT 값이 CCRx값과 일치할 때 인터럽트가 발생
 
 ---
 
