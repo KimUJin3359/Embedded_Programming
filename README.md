@@ -337,7 +337,7 @@
 - 메모리 주소를 컴파일러에게 알려 주어야 함
 
 #### Peripherals 확인
-- Refrence Manual의 Memory Mapping을 확인
+- Datasheet의 Memory Mapping을 확인
 - STM의 경우 0x4000 0000
 
 #### MX_GPIO_Init을 확인
@@ -345,8 +345,8 @@
 - 그 중 GPIOA를 보면, (0x4000 0000 + 0x0001 0000) + 0x0000 0800
 
 #### Offset 확인
-- Reference Manual을 확인
-- STM의 경우, GPIOA는 0x0C
+- Reference Manual의 data register 확인
+- STM의 경우 9.2.4 Port output data register에 GPIOA는 0x0C라고 나와있음
 
 #### ODR레지스터의 주소
 - GPIOA + offset = 0x4001 080C임을 알 수 있음
