@@ -425,6 +425,12 @@ HAL_UART_Transmit(&huart2, (uint8_t *)"UART test\r\n", (uint16_t)strlen("UART te
 // (uint8_t *)"UART test\r\n" : 출력할 문자열
 // (uint16_t)strlen("UART test\r\n") : 문자열 길이
 // 0xFFFFFFFF : 타임아웃
+
+HAL_UART_Receive(&huart2, (uint8_t *)buf, size, 0xFFFFFFFF);
+// &huart2 : uart 핸들 번호
+// (uint8_t *)buf : 입력받을 문자열
+// size : 입력받을 길이
+// 0xFFFFFFFF : 타임아웃
 ```
 - 디바이스와 PC의 설정을 동일하게 해야함
   - 9600-8-N-1
@@ -434,6 +440,82 @@ HAL_UART_Transmit(&huart2, (uint8_t *)"UART test\r\n", (uint16_t)strlen("UART te
   Parity : N(none)
   Stop bit : 1(bit)
   ```
+- STM32CubeIDE에서 실수 출력 방법
+  - Project Properties > C/C++ Build > Settings > Tool settings > MCU GCC Linker > Miscellaneous > Other Flags > "-u \_printf_float"
+- 폴링 방식
+  - 문제점
+    - 효율이 좋지 않음
+    - 데이터를 놓칠 때가 있음
+- 인터럽트 방식
+  - NVIC setting
+  ```
+  // 인터럽트로 처리하기 때문에 계속 읽을 필요가 없음
+  HAL_UART_Receive_IT(&huart2, &buf, 1);
+  ```
+  
+![UART](https://user-images.githubusercontent.com/50474972/116820853-1af93480-abb2-11eb-8e5e-9a8e22ea6d97.png)
+
+#### 분석
+- 임베디드 환경에서는 통신이 안되는 경우가 많음
+
+![파형](https://user-images.githubusercontent.com/50474972/116819927-68bf6e00-abad-11eb-8337-48cdbcbc245d.png)
+
+- H/W, S/W
+  - 회로도 문제
+  - 부품 불량
+  - 소스코드 오류
+- 송신, 수신
+  - 송신이 제대로 되는지
+  - 송신은 제대로 되는데 수신부의 문제가 발생한 경우
+  - 데이터의 깨짐, 처리 불량
+- 간헐적 에러
+  - 잡음, 송수신부 F/W 문제 등
+
+---
+
+### 데이터 통신
+- 종류
+
+| Wire | Car | Wireless |
+| --- | --- | --- |
+| Parallel | CAN | FM/AM |
+| RS232 | LIN | NFC |
+| RS422, RS485 | Flex Ray | Zigbee |
+| I2C | Most | Bluetooth |
+| SPI | Wave | Wi-Fi |
+| 1-Wire 등 | Car-Ethernet 등 | Lora 등 |
+
+#### 분류
+- 거리 : 근거리, 원거리
+- 선의 유무 : 유선, 무선
+- 통신의 방향성 : Simplex, Half-Duplex, Full-Duplex
+- 직렬, 병렬
+- 동기, 비동기
+
+#### 통신 방향
+- Simplex(단방향 전송 방식)
+  - 데이터의 흐름이 한 방향으로만 한정되어 있는 통신방식
+  - 일반적인 송수신, 데이터를 수신만 할 수 있음
+- Half Duplex(반이중 전송 방식)
+  - 양쪽 방향으로 송수신이 가능한 양방향 통신, 한 번에 하나의 전송만 이루어짐
+  - 송신하고 있을 때는 수신이, 수신하고 있을 때는 송신이 되지 않는 전송방식
+- Full Duplex(전이중 전송 방식)
+  - 데이터를 양방향으로 동시에 송수신 할 수 있는 방식
+
+#### 직렬, 병렬
+- 직렬 통신 : 데이터가 1 bit
+- 병렬 통신 : 데이터가 n bits
+  - 보통 직렬통신보다 빠르지만, 항상 그런 것은 아님
+  - 장거리 및 고속 통신에서는 직렬 > 병렬
+    - 고속 통신 : CPU와 RAM간의 통신
+
+#### 동기, 비동기
+- 동기 통신 : 클럭이 있음
+  - 두 디바이스가 약속된 클럭에 맞추어 통신을 함
+  - I2C, SPI 등
+- 비동기 통신 : 클럭이 없음
+  - USART
+
 ---
 
 ### LoRA
