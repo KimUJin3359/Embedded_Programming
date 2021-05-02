@@ -527,3 +527,72 @@ HAL_UART_Receive(&huart2, (uint8_t *)buf, size, 0xFFFFFFFF);
   - WiFi와 동일하게 2.4GHz 대역을 사용
   - WiFi에 비해 전력소모/비용이 저렴함(소량의 데이터를 보낼 때 더 유용)
 - Celluar : 비용적인 문제
+
+---
+
+### Memory
+#### 휘발성
+- 비휘발성 메모리(Non-volatile)
+  - 전원이 끊어져도 데이터가 보존
+  - ROM
+- 휘발성 메모리(Volatile)
+  - 전원이 끊어지면 데이터도 사라짐
+  - RAM
+
+#### ROM
+- Read Only Memory
+- 읽기만 가능한 메모리(근래에는 쓰기도 가능)
+  - RAM처럼 고속으로 읽고 쓰기는 불가능
+  - 쓸 때 별도의 장치가 필요한 경우가 많음
+
+#### SRAM
+- 1비트를 구성할 때 4개의 TR(고저항 부하 타입셀) 혹은 6개의 트랜지스터로 구성
+- 입출력 속도가 빠름
+- 집적도를 높이기는 어려움
+- 가격이 매우 비싸 캐쉬나 레지스터에 사용됨
+
+#### DRAM
+- 캐패시터와 스위치 소자로 구성
+- 비트 상태값을 캐패시터에 저장
+  - 아주 짧은 시간동안 전하를 저장
+  - 트랜지스터는 상태 값에 대한 접근 제어를 담당
+- 충전 시간 및 refresh 시간이 필요
+- SDRAM은 DRAM
+- 직접도가 높은 장점
+- 단점
+  - 전하의 누수
+    - 값을 읽어가면 캐패시터가 방전되므로 다시 충전해야 함
+    - 전하를 저장할 수 있는 시간이 짧아서 방전됨(leakage)
+    - refresh 과정을 통해 캐패시터를 유지해야 함
+    - refresh 사이클 중간에는 상태값에 접근할 수 없어 메모리 성능 저하
+  - 상태 값을 직접 읽을 수 없음
+    - 캐패시터에 저장된 전하량이 매우 적어 감지증폭기(amplifier)라는 신호 증폭기 사용
+  - 충방전 시간이 오래걸림
+
+#### PSRAM
+- Pseduo SRAM
+- 내부는 DRAM인데, Recharge를 Hardware 적으로 해주어서 SRAM처럼 보이게 함
+
+#### SDRAM, DDRAM
+- SDRAM : Synchronous DRAM으로 System bus와 동기를 맞춤
+- DDRAM : Double Data Rate RAM으로 rising edge, falling edge에 맞춰 2배로 빨리 전송
+- 이들 모두가 속도가 느린 DRAM의 한계를 극복하기 위해 만들어진 기술
+
+#### NOR Flash
+- 셀이 병렬
+- Address, Data라인 모두 가질 수 있어 RAM처럼 바이트 단위 랜덤 R/W가 가능
+- XIP를 지원하므로 코드가 실행될 수 있음
+  - XIP(Executable In Place)
+    - 메모리 상에서 직접 코드를 수행할 수 있는 기술
+    - 메모리에 임의 접근이 가능해야 함
+- Erase가 느리지만 Read가 빠름
+- 대용량 데이터에 부적합
+
+#### NAND Flash
+- 셀이 직렬
+- 바이트 단위가 불가능하고 1page 단위로만 읽는 것이 가능
+  - Small Page : 512 바이트 단위
+  - Large Page : 2K 바이트 단위
+- Erase/Write 빠르지만 Read가 느림
+- 대용량 데이터에 적합
+
