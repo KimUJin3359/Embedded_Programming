@@ -9,7 +9,11 @@
 - [`STM`](https://github.com/KimUJin3359/Firmware_Programming#stm)
 - [`레지스터를 통한 입출력`](https://github.com/KimUJin3359/Firmware_Programming#%EB%A0%88%EC%A7%80%EC%8A%A4%ED%84%B0%EB%A5%BC-%ED%86%B5%ED%95%9C-%EC%9E%85%EC%B6%9C%EB%A0%A5)
 - [`Address를 통한 입출력`](https://github.com/KimUJin3359/Firmware_Programming#address%EB%A5%BC-%ED%86%B5%ED%95%9C-%EC%9E%85%EC%B6%9C%EB%A0%A5)
+- [`Timer`](https://github.com/KimUJin3359/Firmware_Programming/blob/master/README.md#timer)
+- [`USART`](https://github.com/KimUJin3359/Firmware_Programming/blob/master/README.md#usart)
+- [`데이터 통신`](https://github.com/KimUJin3359/Firmware_Programming/blob/master/README.md#%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%86%B5%EC%8B%A0)
 - [`LoRA`](https://github.com/KimUJin3359/Firmware_Programming#lora)
+- [`Memory`](https://github.com/KimUJin3359/Firmware_Programming/blob/master/README.md)
 
 ---
 
@@ -56,7 +60,9 @@
 #### 오실로스코프
 - 특정 시간 간격의 전압 변화를 볼 수 있는 장치
 
-#### 용어정리
+---
+
+### 용어정리
 - `DMA(Direct Memory Access)` : CPU 속도를 올리는(성능 향상) 기술
   - 데이터 보내는 작업을 일일이 관여하는 것이 아닌, 다른 작업을 할 수 있음
   - DMA Controller : 데이터 보내는 작업을 대신 관리하는 장치
