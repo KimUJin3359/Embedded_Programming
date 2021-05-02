@@ -67,11 +67,11 @@
   - 입력 설정 시 high, low를 입력 받음
     - **GPIO 입출력은 3.3V**
 - `IWDG` : Watch Dog Timer
-  - 내부적으로 타이머를 돌려, 프로그램이 정상 동작하는지를 판단
+  - 내부적으로 타이머를 돌려, **프로그램이 정상 동작**하는지를 판단
 - `NVIC` : Nested Vectored Interrupt Controller
-  - 중첩된 인터럽트를 제어하는 기능
+  - **중첩된 인터럽트를 제어**하는 기능
   - 모든 exception에 대해서 우선순위가 설정되어있고 이 우선순위에 따라 interrupt를 처리
-  - 숫자가 낮을수록, 우선순위가 높음
+  - **숫자가 낮을수록, 우선순위가 높음**
   - 인터럽트 모드
     - External Interrupt Mode with Rising edge trigger detection
     - External Interrupt Mode with Falling edge trigger detection
@@ -282,7 +282,7 @@
 - 디버거
   - Trace : CPU의 동작을 멈추면서, 한 단계씩 진행하는 디버깅 방식
   - 임베디드 환경에서 CPU를 일시 중지시키는 일은 어려움
-  - 따라서, 디버거용 장비가 필요
+  - 따라서, **디버거용 장비가 필요**
     - ST-Link
   - Nucleo 보드에는 ST-Link/V2가 포함되어 음
 
@@ -306,17 +306,17 @@
   // PIN A5를 Output Mode, 50MHz로 설정하려면
   GPIO_CRL = 0x003;
   ```
-- IDR : port input data register
+- `IDR` : port input data register
   - 포트가 입력일 경우 들어오는 데이터가 저장되는 레지스터
-- ODR : port output data register
+- `ODR` : port output data register
   - 포트가 출력일 경우 나갈 데이터를 저장
-- BSRR : port bit set/reset register
+- `BSRR` : port bit set/reset register
   - 해당 비트를 0, 1로 설정할 수 있음
   - BR = RESET, BS = SET 담당
   - ODR을 쓰는것보다 연산 처리가 간단하고, 속도가 빠름
-- BRR : port bit reset register
+- `BRR` : port bit reset register
   - 오로지 리셋만함
-- LCKR : port configuration lock register
+- `LCKR` : port configuration lock register
   - GPIO는 input, output 택 일 사용이 가능, 사용 중 변경도 가능
   - 락을 걸면 input -> output, output -> input 변경이 불가
 - 원하는 비트만 세트
@@ -331,7 +331,7 @@
 ---
 
 ### Address를 통한 입출력
-- Memory Mapped I/O
+- **Memory Mapped I/O**
 - 데이터시트를 확인하면 각 레지스터의 주소를 알 수 있음
 - 메모리 주소를 컴파일러에게 알려 주어야 함
 
@@ -395,6 +395,45 @@ UpdateEvent = 64000000 / (64 * 1000) = 1000Hz = 0.001sec
 - 입력 캡쳐 모드 : 타이머가 생성하는 PWM 신호를 다른 타이머에서 캡쳐하여 Freq, Duty 비 확인 가능
 - 출력 비교 모드 : TCNT 값이 CCRx값과 일치할 때 인터럽트가 발생
 
+---
+
+### USART
+- Universal Synchronous Asynchronous Receive Transmit
+- **범용 동기/비동기식 송수신**
+- 데이터를 **직렬로 전송**하는 프로토콜
+- 동기식, 비동기식 2가지 프로토콜이 있지만 거의 비동기식으로 사용
+- 데이터 송수신용으로 2개의 선이 사용되며 **전이중**
+- 70년대경 개발된 프로토콜
+- 용도
+  - 디버깅
+  - 단순 통신
+  - 동작확인
+- 장점
+  - 역사가 오래되고 편리하여 많이 사용되는 직렬 표준
+  - 프로토콜이 쉬움
+  - 패리티 비트를 사용한 오류 확인 가능
+- 단점
+  - 통신 거리가 20m로 애매
+  - 데이터 전송속도가 매우 느림
+  - 여러 디바이스와 연결할 수 없는 1:1 구조
+  - 1:1의 단점을 보완하고자 RS-422, RS-485 등 사용
+
+#### 사용
+```
+HAL_UART_Transmit(&huart2, (uint8_t *)"UART test\r\n", (uint16_t)strlen("UART test\r\n"), 0xFFFFFFFF);
+// &huart2 : uart 핸들 번호
+// (uint8_t *)"UART test\r\n" : 출력할 문자열
+// (uint16_t)strlen("UART test\r\n") : 문자열 길이
+// 0xFFFFFFFF : 타임아웃
+```
+- 디바이스와 PC의 설정을 동일하게 해야함
+  - 9600-8-N-1
+  ```
+  Speed : 9600
+  Data : 8(bit)
+  Parity : N(none)
+  Stop bit : 1(bit)
+  ```
 ---
 
 ### LoRA
