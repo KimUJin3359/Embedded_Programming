@@ -336,6 +336,28 @@
 - 데이터시트를 확인하면 각 레지스터의 주소를 알 수 있음
 - 메모리 주소를 컴파일러에게 알려 주어야 함
 
+#### Peripherals 확인
+- Refrence Manual의 Memory Mapping을 확인
+- STM의 경우 0x4000 0000
+
+#### MX_GPIO_Init을 확인
+- ctrl + click 시 해당 함수로 이동
+- 그 중 GPIOA를 보면, (0x4000 0000 + 0x0001 0000) + 0x0000 0800
+
+#### Offset 확인
+- Reference Manual을 확인
+- STM의 경우, GPIOA는 0x0C
+
+#### ODR레지스터의 주소
+- GPIOA + offset = 0x4001 080C임을 알 수 있음
+
+#### 값 변경
+```
+  // volatile : compiler 최적화 방지
+  // unsigned : 주소값이기 때문에
+  *((volatile unsigned int *)0x4001080C) = 0xF0;
+```
+
 ---
 
 ### LoRA
