@@ -403,6 +403,93 @@ UpdateEvent = 64000000 / (64 * 1000) = 1000Hz = 0.001sec
 
 ---
 
+### Timing Diagram
+- 신호들이 시간별로 처리되는 과정을 나타낸 다이어그램
+
+#### 용어 정리
+- Level : High, Low
+- Edge : Rising, Falling
+```
+      high level
+     ┌───────┐      ┌───────
+     │       │      │ falling
+─────┘       └──────┘
+low level   rising
+```
+- Valid(유효한), Valid(유효하지 않은)
+
+![valid,invalid](https://user-images.githubusercontent.com/50474972/116883882-0e7fe500-ac61-11eb-8cfe-c8ce36db5d70.png)
+
+- 래치 : Level Triggered 소자
+- 플립플롭 : Edge Triggered 소자
+  - 대개의 시스템이 F/F로 이루어져 있기 때문에 Edge가 더 중요
+  - 대개 상승엣지(rising edge)를 기준으로 동작
+
+#### 타이밍 다이어그램
+![dff](https://user-images.githubusercontent.com/50474972/116884270-84844c00-ac61-11eb-8ee2-c7caefc39496.png)
+- clock의 rising edge일 때, D의 값에 따라 결과값이 정해짐
+
+#### 셋업 타임
+- 상승 엣지 이전에 셋업 타임동안 데이터가 안정되어 있어야 함
+
+![image](https://user-images.githubusercontent.com/50474972/116884726-07a5a200-ac62-11eb-88c0-3114133abdd8.png)
+- INPUT1 : 셋업타임 바이올레이션 발생 -> 입력 불안정 -> 출력 불안정 -> 시스템 불안정
+  - 따라서 모든 디바이스는 셋업 타임이 얼마라고 명시해놓음
+
+#### 홀드 타임
+- 홀드 타임 동안 유효한 데이터가 유지되어야 함
+
+![image](https://user-images.githubusercontent.com/50474972/116884899-3f144e80-ac62-11eb-9b07-a7fafd46d2ae.png)
+- INPUT2 : rising edge 이후에 신호를 유지하지 못하고 0에서 1로 바뀜
+  - 홀드타임 바이올레이션 발생 -> 
+
+---
+
+### 데이터 통신
+- 종류
+
+| Wire | Car | Wireless |
+| --- | --- | --- |
+| Parallel | CAN | FM/AM |
+| RS232 | LIN | NFC |
+| RS422, RS485 | Flex Ray | Zigbee |
+| I2C | Most | Bluetooth |
+| SPI | Wave | Wi-Fi |
+| 1-Wire 등 | Car-Ethernet 등 | Lora 등 |
+
+#### 분류
+- 거리 : 근거리, 원거리
+- 선의 유무 : 유선, 무선
+- 통신의 방향성 : Simplex, Half-Duplex, Full-Duplex
+- 직렬, 병렬
+- 동기, 비동기
+
+#### 통신 방향
+- Simplex(단방향 전송 방식)
+  - 데이터의 흐름이 한 방향으로만 한정되어 있는 통신방식
+  - 일반적인 송수신, 데이터를 수신만 할 수 있음
+- Half Duplex(반이중 전송 방식)
+  - 양쪽 방향으로 송수신이 가능한 양방향 통신, 한 번에 하나의 전송만 이루어짐
+  - 송신하고 있을 때는 수신이, 수신하고 있을 때는 송신이 되지 않는 전송방식
+- Full Duplex(전이중 전송 방식)
+  - 데이터를 양방향으로 동시에 송수신 할 수 있는 방식
+
+#### 직렬, 병렬
+- 직렬 통신 : 데이터가 1 bit
+- 병렬 통신 : 데이터가 n bits
+  - 보통 직렬통신보다 빠르지만, 항상 그런 것은 아님
+  - 장거리 및 고속 통신에서는 직렬 > 병렬
+    - 고속 통신 : CPU와 RAM간의 통신
+
+#### 동기, 비동기
+- 동기 통신 : 클럭이 있음
+  - 두 디바이스가 약속된 클럭에 맞추어 통신을 함
+  - I2C, SPI 등
+- 비동기 통신 : 클럭이 없음
+  - USART
+
+---
+
 ### USART
 - Universal Synchronous Asynchronous Receive Transmit
 - **범용 동기/비동기식 송수신**
@@ -479,48 +566,106 @@ HAL_UART_Receive(&huart2, (uint8_t *)buf, size, 0xFFFFFFFF);
 
 ---
 
-### 데이터 통신
-- 종류
+### I2C
+- Inter-Itegrated Circuit(아이 스퀘어 씨)
+- 초단거리용 2 wire 사용 직렬 버스 통신 방식
+  - 주로 짧은 거리내에서 주로 저속(100 kbps)의 센서 데이터를 읽는 용도
+  - 이에 비해 SPI는 고속의 데이터를 읽는 용도로 사용
+- 2 wire : SCL(시리얼 클럭), SDA(시리얼 데이터)
+- 멀티 마스터, 멀티 슬레이브를 지원
+- 전압 레벨은 2.3 ~ 5.5 V의 전압을 이용
 
-| Wire | Car | Wireless |
-| --- | --- | --- |
-| Parallel | CAN | FM/AM |
-| RS232 | LIN | NFC |
-| RS422, RS485 | Flex Ray | Zigbee |
-| I2C | Most | Bluetooth |
-| SPI | Wave | Wi-Fi |
-| 1-Wire 등 | Car-Ethernet 등 | Lora 등 |
+#### 장단점
+- 장점
+  - 하드웨어적으로 간단함
+  - 하나의 버스에 많은 디바이스를 연결할 수 있음
+- 단점
+  - 다른 통신 방식에 비하면 전송속도가 최대 400kbps로 느린 편
+  - 거리의 제약이 심함
+    - PCB 내의 길이 정도로 사용
+  - 주소가 고정되어있다면 같은 노드를 연결할 수 없음
+- 1개의 마스터가 다수의 저속 장치와 통신하는데 적합
 
-#### 분류
-- 거리 : 근거리, 원거리
-- 선의 유무 : 유선, 무선
-- 통신의 방향성 : Simplex, Half-Duplex, Full-Duplex
-- 직렬, 병렬
-- 동기, 비동기
+#### I2C Timing Diagram
+- SCL이 Low일 때만 SDA가 변할 수 있음
+  - High일 때 변화 불가
+- Start/Stop
+  - SCL이 Low일 때 변하는 경우
+  - SCL = HIGH일 때 SDA가 Falling edge이면 데이터의 시작을 의미
+  - SCL = HIGH일 때 SDA가 Rising edge이면 데이터의 끝을 의미
+- 주소 데이터 전송
+  - I2C 통신에서 주소 또는 데이터는 패킷의 형태로 전송되어야 하는데, 각 패킷은 9개 비트로 구성됨
+    - 처음 8비트는 transmitter에 의해 보내짐
+    - 마지막 9번째 비트는 receiver가 잘 받았다는 의미로 ACK를 low로 보냄
+    - 데이터를 잘 받았다면 low가 뜰 것이고, 송신기는 잘 받았다는 것을 알 수 있음
+  - receiver가 마지막에 low 신호를 보내지 않았다면, SDA는 high가 되고 송신기는 NACK로 인식
+  - 송신기가 NACK 신호를 인식하면 패킷을 다시 보내거나, 패킷의 전송을 중단하는 등의 조치를 취함
 
-#### 통신 방향
-- Simplex(단방향 전송 방식)
-  - 데이터의 흐름이 한 방향으로만 한정되어 있는 통신방식
-  - 일반적인 송수신, 데이터를 수신만 할 수 있음
-- Half Duplex(반이중 전송 방식)
-  - 양쪽 방향으로 송수신이 가능한 양방향 통신, 한 번에 하나의 전송만 이루어짐
-  - 송신하고 있을 때는 수신이, 수신하고 있을 때는 송신이 되지 않는 전송방식
-- Full Duplex(전이중 전송 방식)
-  - 데이터를 양방향으로 동시에 송수신 할 수 있는 방식
+---
 
-#### 직렬, 병렬
-- 직렬 통신 : 데이터가 1 bit
-- 병렬 통신 : 데이터가 n bits
-  - 보통 직렬통신보다 빠르지만, 항상 그런 것은 아님
-  - 장거리 및 고속 통신에서는 직렬 > 병렬
-    - 고속 통신 : CPU와 RAM간의 통신
+### SPI
+- Serial Peripheral Interface
+- MCU와 주변장치간 고속 통신이 가능하도록 함
+- 4선(/SS, SCK, MOSI, MISO)을 이용한 단거리용 직렬 버스 통신
+  - /SS : Slave Select(슬레이브 선택신호), 보통 Low Active
+  - SCK : Clock 마스터가 발생하는 클럭
+  - MOSI : Master Output Slave Input
+  - MISO : Master Input Slave Output
+- SPI는 마스터와 슬레이브가 클럭을 공유하는 동기식
+- 하나의 마스터가 버스를 통하여 다수의 슬레이브와 송수신이 가능한 통신 방식
 
-#### 동기, 비동기
-- 동기 통신 : 클럭이 있음
-  - 두 디바이스가 약속된 클럭에 맞추어 통신을 함
-  - I2C, SPI 등
-- 비동기 통신 : 클럭이 없음
-  - USART
+#### 장단점
+- 장점
+  - SPI는 양방향 통신을 할 떄 완전한 전이중(Full Duplex)을 지원
+  - 데이터 비트의 길이를 선택 가능
+  - 하드웨어 인터페이스가 매우 간단
+  - 주소 충돌의 문제가 없음
+  - 전송 속도가 I2C에 비해 수십배 빠름
+- 단점
+  - 마스터는 단 1개만 존재
+  - 여러 개의 슬레이브를 연결할 경우 /SS 선이 늘어나 회로가 복잡해짐
+  - 하드웨어적으로 슬레이브를 인식할 수 있는 방법이 없음
+    - I2C는 슬레이브 자체가 주소를 갖고 있지만, SPI 디바이스는 하드웨어 주소가 없음
+    - I2C와 같은 ACK를 받을 수 있는 구조가 아니어서 슬레이브가 존재하는지 아닌지 확인할 수 없음
+  - 노이즈에 취약하고 거리가 매우 짧음
+
+#### 통신 원리
+- 마스터는 /SS로 슬레이브를 선택한 후 MOSI를 통해 데이터를 송신하면 되는 매우 간단한 구조
+- 일반적으로 마스터는 MCU, 슬레이브는 센서 혹은 다른 장치
+  - SPI는 하나의 장치(마스터)만 클럭신호를 발생
+    - 마스터 : 클럭 신호를 발생하여 통신을 주도하는 장치
+    - 슬레이브 : 그 외
+```
+FIrst -> Master : A B C D -> Slave : 2 5 1 4 (trash value)
+After First Clock -> Master : 4 A B C -> Slave : D 2 5 1
+After Second Clock -> Master : 1 4 A B -> Slave : C D 2 5
+After Third Clock -> Master : 5 1 4 A -> Slave : B C D 2
+After Forth Clock -> Master : 2 5 1 4 -> Slave : A B C D
+```
+- 마스터가 쓴 데이터가 검증 됨
+- 마스터가 읽기 시작할 때 슬레이브로 부터 들어오는 값은 의미없는 쓰레기값
+
+#### SPI Timing Diagram
+- CPOL(clock polarity)
+  - CPOL = 0 : 신호의 기본값(low)
+  - CPOL = 1 : 신호의 기본값(high)
+- CPHA(clock phase)
+  - CPHA = 0 : rising edge에서 값을 읽고, 하강에서 변경
+  - CPHA - 1 : falling edge에서 값을 읽고, 상승에서 변경
+
+![image](https://user-images.githubusercontent.com/50474972/116892780-29575700-ac6b-11eb-925d-53a48f8fafbb.png)
+
+#### I2C와 비교
+
+| `항목` | `I2C` | `SPI` | `UART` |
+| --- | --- | --- | --- |
+| 전송 방법 | 직렬 | 직렬 | 직렬 |
+| 전송 모드 | 반이중 | 전이중 | 전이중 |
+| 신호 맞추는 법 | 동기 | 동기 | 비동기 |
+| 데이터 신호 | 디지털 | 디지털 | 디지털 |
+| 장치 연결 | 1 : N | 1 : N | 1 : 1 |
+| 거리 | 단거리 | 단거리 | 단거리 |
+| 전송 선로 | 유선 | 유선 | 유선 |
 
 ---
 
