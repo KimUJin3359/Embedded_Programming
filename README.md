@@ -1,4 +1,4 @@
-# Firmware_Programming
+# Embedded_Programming
 
 ### 목차
 - [`임베디드 회로`](https://github.com/KimUJin3359/Firmware_Programming#%EC%9E%84%EB%B2%A0%EB%94%94%EB%93%9C-%ED%9A%8C%EB%A1%9C)
